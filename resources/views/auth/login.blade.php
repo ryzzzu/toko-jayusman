@@ -84,10 +84,6 @@
                         Masuk
                     </x-ui.button>
                 </form>
-
-                <p class="mt-8 text-center text-xs text-slate-400">
-                    Demo: owner@gmail.com / password
-                </p>
             </div>
         </div>
     </div>

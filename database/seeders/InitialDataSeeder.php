@@ -8,8 +8,6 @@ use App\Models\Product;
 use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-
 class InitialDataSeeder extends Seeder
 {
     public function run(): void
@@ -29,7 +27,7 @@ class InitialDataSeeder extends Seeder
         User::create([
             'name' => 'Bapak Jayusman',
             'email' => 'owner@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => 'password',
             'role' => 'owner',
             'branch_id' => null,
         ]);
@@ -37,7 +35,7 @@ class InitialDataSeeder extends Seeder
         User::create([
             'name' => 'Manager Cianjur',
             'email' => 'manager@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => 'password',
             'role' => 'manager',
             'branch_id' => 1,
         ]);
@@ -45,7 +43,7 @@ class InitialDataSeeder extends Seeder
         User::create([
             'name' => 'Supervisor Cianjur',
             'email' => 'supervisor@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => 'password',
             'role' => 'supervisor',
             'branch_id' => 1,
         ]);
@@ -53,7 +51,7 @@ class InitialDataSeeder extends Seeder
         User::create([
             'name' => 'Kasir Cianjur',
             'email' => 'cashier@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => 'password',
             'role' => 'cashier',
             'branch_id' => 1,
         ]);
@@ -61,7 +59,7 @@ class InitialDataSeeder extends Seeder
         User::create([
             'name' => 'Gudang Cianjur',
             'email' => 'warehouse@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => 'password',
             'role' => 'warehouse',
             'branch_id' => 1,
         ]);
