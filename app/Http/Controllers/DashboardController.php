@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ResolvesUserBranch;
 use App\Models\Branch;
 use App\Models\Product;
 use App\Models\Stock;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    use ResolvesUserBranch;
+
     public function index()
     {
         $user = Auth::user();
@@ -43,9 +46,21 @@ class DashboardController extends Controller
             ));
         }
 
+        if (!$user->branch_id) {
+            return view('dashboard', [
+                'totalProducts' => 0,
+                'totalTransactions' => 0,
+                'totalIncome' => 0,
+                'totalStock' => 0,
+                'lowStocks' => collect(),
+                'latestTransactions' => collect(),
+                'branchWarning' => true,
+            ]);
+        }
+
         $branchId = $user->branch_id;
 
-        $totalProducts = Stock::where('branch_id', $branchId)->count();
+        $totalProducts = Product::count();
         $totalTransactions = Transaction::where('branch_id', $branchId)->count();
         $totalIncome = Transaction::where('branch_id', $branchId)->sum('total_price');
         $totalStock = Stock::where('branch_id', $branchId)->sum('quantity');

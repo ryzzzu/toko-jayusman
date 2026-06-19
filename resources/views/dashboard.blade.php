@@ -19,6 +19,18 @@
     <div class="py-8 bg-gray-100 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
+            @if(session('error'))
+                <div class="mb-5 p-4 bg-red-100 text-red-700 rounded-xl">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if(!empty($branchWarning))
+                <div class="mb-5 p-4 bg-yellow-100 text-yellow-800 rounded-xl">
+                    Akun Anda belum terhubung ke cabang. Hubungi Pak Jayusman untuk penugasan cabang.
+                </div>
+            @endif
+
             {{-- WELCOME CARD --}}
             <div class="bg-gradient-to-r from-indigo-700 via-blue-700 to-sky-500 rounded-2xl p-6 text-white shadow-lg mb-6">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

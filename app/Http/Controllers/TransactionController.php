@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ResolvesUserBranch;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\StockMovement;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
+use App\Support\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
+    use ResolvesUserBranch;
+
     public function index()
     {
         $user = Auth::user();
+        $branchCheck = $this->ensureBranchAssigned();
+        if ($branchCheck instanceof \Illuminate\Http\RedirectResponse) {
+            return $branchCheck;
+        }
 
         $transactions = Transaction::with(['branch', 'cashier']);
 
@@ -30,13 +38,12 @@ class TransactionController extends Controller
 
     public function create()
     {
-        $user = Auth::user();
-        $branchId = $user->branch_id;
-
-        if (!$branchId) {
-            return redirect()->route('dashboard')
-                ->with('error', 'Akun kasir belum terhubung ke cabang.');
+        $branchCheck = $this->ensureBranchAssigned();
+        if ($branchCheck instanceof \Illuminate\Http\RedirectResponse) {
+            return $branchCheck;
         }
+
+        $branchId = Auth::user()->branch_id;
 
         $products = Product::whereHas('stocks', function ($query) use ($branchId) {
             $query->where('branch_id', $branchId)->where('quantity', '>', 0);
@@ -57,31 +64,29 @@ class TransactionController extends Controller
             'payment' => 'required|integer|min:0',
         ]);
 
+        $branchCheck = $this->ensureBranchAssigned();
+        if ($branchCheck instanceof \Illuminate\Http\RedirectResponse) {
+            return $branchCheck;
+        }
+
         $user = Auth::user();
         $branchId = $user->branch_id;
 
-        if (!$branchId) {
-            return back()->with('error', 'Akun kasir belum terhubung ke cabang.');
-        }
-
-        $lineItems = [];
+        $mergedItems = [];
         foreach ($request->product_id as $index => $productId) {
             if (empty($productId)) {
                 continue;
             }
 
-            $quantity = $request->quantity[$index] ?? null;
-            if (!$quantity || $quantity < 1) {
+            $quantity = (int) ($request->quantity[$index] ?? 0);
+            if ($quantity < 1) {
                 return back()->with('error', 'Jumlah barang harus diisi dengan benar.');
             }
 
-            $lineItems[] = [
-                'product_id' => $productId,
-                'quantity' => $quantity,
-            ];
+            $mergedItems[$productId] = ($mergedItems[$productId] ?? 0) + $quantity;
         }
 
-        if (empty($lineItems)) {
+        if (empty($mergedItems)) {
             return back()->with('error', 'Pilih minimal satu produk.');
         }
 
@@ -91,12 +96,12 @@ class TransactionController extends Controller
             $totalPrice = 0;
             $items = [];
 
-            foreach ($lineItems as $lineItem) {
-                $product = Product::findOrFail($lineItem['product_id']);
-                $quantity = $lineItem['quantity'];
+            foreach ($mergedItems as $productId => $quantity) {
+                $product = Product::findOrFail($productId);
 
                 $stock = Stock::where('branch_id', $branchId)
-                    ->where('product_id', $product->id)
+                    ->where('product_id', $productId)
+                    ->lockForUpdate()
                     ->first();
 
                 if (!$stock || $stock->quantity < $quantity) {
@@ -124,7 +129,7 @@ class TransactionController extends Controller
             }
 
             $transaction = Transaction::create([
-                'transaction_code' => 'TRX-' . date('YmdHis'),
+                'transaction_code' => 'TRX-' . now()->format('YmdHis') . '-' . random_int(100, 999),
                 'branch_id' => $branchId,
                 'cashier_id' => $user->id,
                 'transaction_date' => now()->toDateString(),
@@ -155,6 +160,12 @@ class TransactionController extends Controller
                     'movement_date' => now()->toDateString(),
                 ]);
             }
+
+            ActivityLogger::log(
+                'transaksi',
+                'Kasir ' . $user->name . ' mencatat transaksi ' . $transaction->transaction_code
+                    . ' senilai Rp ' . number_format($totalPrice, 0, ',', '.')
+            );
 
             DB::commit();
 
