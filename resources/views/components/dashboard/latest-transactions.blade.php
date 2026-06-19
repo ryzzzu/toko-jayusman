@@ -4,18 +4,13 @@
     $latestTransactions = $latestTransactions ?? collect();
 @endphp
 
-<x-ui.card :padding="false" {{ $attributes }}>
-    <x-slot:header>
-        <div class="flex items-center justify-between gap-3">
-            <div>
-                <h3 class="font-semibold text-slate-900 dark:text-white">Transaksi Terbaru</h3>
-                <p class="text-sm text-slate-500">5 transaksi terakhir yang tercatat</p>
-            </div>
-            @if(in_array(auth()->user()->role, ['owner', 'manager', 'supervisor', 'cashier']))
-                <x-ui.button href="{{ route('transactions.index') }}" variant="ghost">Lihat Semua</x-ui.button>
-            @endif
-        </div>
-    </x-slot:header>
+<x-dashboard.panel title="Transaksi Terbaru" :description="$latestTransactions->count() . ' transaksi terakhir dari backend'" {{ $attributes }}>
+    <x-slot:action>
+        @if(in_array(auth()->user()->role, ['owner', 'manager', 'supervisor', 'cashier']))
+            <x-ui.button href="{{ route('transactions.index') }}" variant="ghost">Lihat Semua</x-ui.button>
+        @endif
+    </x-slot:action>
+
     <div class="ui-table-wrap rounded-none border-0 shadow-none">
         <table class="ui-table">
             <thead>
@@ -23,7 +18,9 @@
                     <th>Kode</th>
                     @if($showCashier)<th>Kasir</th>@endif
                     <th>Cabang</th>
+                    <th>Tanggal</th>
                     <th class="text-right">Total</th>
+                    <th class="text-center">Status</th>
                 </tr>
             </thead>
             <tbody data-searchable>
@@ -38,17 +35,14 @@
                             <td>{{ $transaction->cashier->name ?? '—' }}</td>
                         @endif
                         <td>{{ $transaction->branch->branch_name ?? '—' }}</td>
+                        <td class="text-slate-500">{{ $transaction->transaction_date }}</td>
                         <td class="text-right font-semibold text-slate-900 dark:text-white">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</td>
+                        <td class="text-center"><x-ui.badge variant="active">Selesai</x-ui.badge></td>
                     </tr>
                 @empty
-                    <tr data-row data-search="">
-                        <td colspan="{{ $showCashier ? 4 : 3 }}" class="py-10 text-center">
-                            <p class="text-sm font-medium text-slate-700 dark:text-slate-300">Belum ada transaksi</p>
-                            <p class="mt-1 text-xs text-slate-500">Transaksi akan muncul setelah penjualan dilakukan.</p>
-                        </td>
-                    </tr>
+                    <x-ui.table-empty :colspan="$showCashier ? 6 : 5" title="Belum ada transaksi" description="Transaksi akan muncul setelah penjualan dilakukan." data-row data-search="" />
                 @endforelse
             </tbody>
         </table>
     </div>
-</x-ui.card>
+</x-dashboard.panel>

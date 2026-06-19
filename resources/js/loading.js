@@ -1,12 +1,3 @@
-const LOADING_MIN_MS = 0;
-
-let pageStartedAt = 0;
-let pageHideTimer = null;
-
-function dispatch(name, detail = {}) {
-    window.dispatchEvent(new CustomEvent(name, { detail }));
-}
-
 function getFormMethod(form) {
     const override = form.querySelector('input[name="_method"]')?.value;
     return (override || form.method || 'GET').toUpperCase();
@@ -24,16 +15,6 @@ function getFormLoadingMessage(form, submitBtn) {
     if (method === 'GET') return 'Memuat...';
 
     return 'Menyimpan...';
-}
-
-function shouldSkipForm(form) {
-    if (!(form instanceof HTMLFormElement)) return true;
-    if (form.dataset.noLoading !== undefined) return true;
-
-    const method = getFormMethod(form);
-    if (method === 'GET' && form.dataset.loadingSearch === undefined) return true;
-
-    return false;
 }
 
 function setSubmitButtonLoading(form, message) {
@@ -84,7 +65,11 @@ export function initLoading() {
 
     document.addEventListener('submit', (event) => {
         const form = event.target;
-        if (shouldSkipForm(form)) return;
+        if (!(form instanceof HTMLFormElement)) return;
+        if (form.dataset.noLoading !== undefined) return;
+
+        const method = getFormMethod(form);
+        if (method === 'GET' && form.dataset.loadingSearch === undefined) return;
 
         if (form.dataset.loadingConfirm !== undefined) {
             const confirmed = window.confirm(form.dataset.loadingConfirm);
@@ -95,5 +80,5 @@ export function initLoading() {
         }
 
         showFormLoading(form);
-    });
+    }, true);
 }

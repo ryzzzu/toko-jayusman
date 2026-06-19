@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Data Transaksi</h1>
-                <p class="text-sm text-slate-500">Riwayat transaksi penjualan yang tercatat di sistem</p>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Transaksi</h1>
+                <p class="mt-0.5 text-sm text-slate-500">Riwayat transaksi penjualan</p>
             </div>
             @if(auth()->user()->role === 'cashier')
-                <x-ui.button href="{{ route('transactions.create') }}" variant="primary">+ Transaksi Baru</x-ui.button>
+                <x-ui.button href="{{ route('transactions.create') }}" variant="primary">Transaksi Baru</x-ui.button>
             @endif
         </div>
     </x-slot>
@@ -16,15 +16,14 @@
         $totalTransactions = $transactions->count();
     @endphp
 
-    <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <x-ui.stat-card label="Jumlah Transaksi" :value="$totalTransactions" />
-        <x-ui.stat-card class="md:col-span-2" label="Total Nilai Transaksi" :value="'Rp ' . number_format($totalIncome, 0, ',', '.')" />
+        <x-ui.stat-card label="Total Nilai" :value="'Rp ' . number_format($totalIncome, 0, ',', '.')" />
     </div>
 
     <x-ui.card :padding="false">
         <x-slot:header>
-            <h3 class="font-semibold text-slate-900 dark:text-white">Riwayat Transaksi</h3>
-            <p class="text-sm text-slate-500">Data transaksi terbaru ditampilkan paling atas</p>
+            <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Riwayat Transaksi</h3>
         </x-slot:header>
         <div class="ui-table-wrap rounded-none border-0 shadow-none">
             <table class="ui-table">

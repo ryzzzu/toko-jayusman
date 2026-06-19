@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
-                <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Laporan Transaksi</h1>
-                <p class="text-sm text-slate-500">Filter, pantau, dan cetak laporan penjualan</p>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Laporan Transaksi</h1>
+                <p class="mt-0.5 text-sm text-slate-500">Filter dan cetak laporan penjualan</p>
             </div>
             <div class="flex gap-2 no-print">
                 <x-ui.button href="{{ route('reports.transactions') }}" variant="primary">Transaksi</x-ui.button>
@@ -18,7 +18,7 @@
         $rataRata = $totalTransaksi > 0 ? $grandTotal / $totalTransaksi : 0;
     @endphp
 
-    <div class="no-print mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="no-print mb-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <x-ui.stat-card label="Total Transaksi" :value="$totalTransaksi" trend="Sesuai filter" />
         <x-ui.stat-card label="Total Pendapatan" :value="'Rp ' . number_format($grandTotal, 0, ',', '.')" />
         <x-ui.stat-card label="Rata-rata Transaksi" :value="'Rp ' . number_format($rataRata, 0, ',', '.')" />

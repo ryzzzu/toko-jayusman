@@ -12,13 +12,13 @@
     }
 
     body {
-        @apply bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+        @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100;
     }
 }
 
 @layer components {
     .ui-input {
-        @apply block w-full rounded-xl border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition duration-200 placeholder:text-slate-400 focus:border-brand-500 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100;
+        @apply block w-full rounded-lg border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100;
     }
 
     .ui-select {
@@ -35,7 +35,7 @@
     }
 
     .ui-table-wrap {
-        @apply overflow-x-auto rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900;
+        @apply overflow-x-auto;
     }
 
     .ui-table {
@@ -43,29 +43,60 @@
     }
 
     .ui-table thead {
-        @apply sticky top-0 z-10 bg-slate-50 dark:bg-slate-800;
+        @apply bg-slate-50 dark:bg-slate-800/80;
     }
 
     .ui-table th {
-        @apply px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400;
-    }
-
-    .ui-table tbody tr:nth-child(even) {
-        @apply bg-slate-50/50 dark:bg-slate-800/30;
+        @apply border-b border-slate-200 px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:text-slate-400;
     }
 
     .ui-table tbody tr {
-        @apply border-t border-slate-100 transition duration-200 hover:bg-brand-50/40 dark:border-slate-800 dark:hover:bg-brand-950/20;
+        @apply border-b border-slate-100 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50;
     }
 
     .ui-table td {
-        @apply px-5 py-4 text-slate-700 dark:text-slate-300;
+        @apply px-4 py-3 text-slate-700 dark:text-slate-300;
     }
 
     .app-shell {
-        @apply bg-slate-100 dark:bg-slate-950;
-        background-image: radial-gradient(circle at 1px 1px, rgb(148 163 184 / 0.12) 1px, transparent 0);
-        background-size: 24px 24px;
+        @apply bg-slate-50 dark:bg-slate-950;
+    }
+
+    #page-content.page-content--enter {
+        animation: page-content-enter 180ms ease-out both;
+    }
+
+    #page-content.page-content--exit {
+        animation: page-content-exit 120ms ease-in both;
+    }
+
+    @keyframes page-content-enter {
+        from {
+            opacity: 0;
+            transform: translateY(4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes page-content-exit {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-4px);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #page-content.page-content--enter,
+        #page-content.page-content--exit {
+            animation: none;
+        }
     }
 }
 

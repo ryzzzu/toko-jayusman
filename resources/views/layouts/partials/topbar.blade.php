@@ -3,11 +3,11 @@
     $role = $user->role ?? '';
 
     $roleMeta = [
-        'owner' => ['label' => 'Owner', 'accent' => 'bg-brand-600', 'badge' => 'bg-brand-50 text-brand-700 ring-brand-600/20'],
-        'manager' => ['label' => 'Manajer Toko', 'accent' => 'bg-accent-600', 'badge' => 'bg-accent-50 text-accent-700 ring-accent-600/20'],
-        'supervisor' => ['label' => 'Supervisor', 'accent' => 'bg-violet-600', 'badge' => 'bg-violet-50 text-violet-700 ring-violet-600/20'],
-        'cashier' => ['label' => 'Kasir', 'accent' => 'bg-amber-500', 'badge' => 'bg-amber-50 text-amber-800 ring-amber-600/20'],
-        'warehouse' => ['label' => 'Pegawai Gudang', 'accent' => 'bg-slate-700', 'badge' => 'bg-slate-100 text-slate-700 ring-slate-600/20'],
+        'owner' => ['label' => 'Owner', 'accent' => 'bg-brand-600', 'badge' => 'bg-brand-50 text-brand-700 ring-brand-600/20 dark:bg-brand-950/40 dark:text-brand-300'],
+        'manager' => ['label' => 'Manajer Toko', 'accent' => 'bg-accent-600', 'badge' => 'bg-accent-50 text-accent-700 ring-accent-600/20 dark:bg-accent-950/40 dark:text-accent-300'],
+        'supervisor' => ['label' => 'Supervisor', 'accent' => 'bg-brand-500', 'badge' => 'bg-brand-50 text-brand-700 ring-brand-600/20 dark:bg-brand-950/40 dark:text-brand-300'],
+        'cashier' => ['label' => 'Kasir', 'accent' => 'bg-accent-500', 'badge' => 'bg-accent-50 text-accent-700 ring-accent-600/20 dark:bg-accent-950/40 dark:text-accent-300'],
+        'warehouse' => ['label' => 'Pegawai Gudang', 'accent' => 'bg-brand-700', 'badge' => 'bg-slate-100 text-slate-700 ring-slate-600/20 dark:bg-slate-800 dark:text-slate-300'],
     ];
 
     $meta = $roleMeta[$role] ?? ['label' => ucfirst($role), 'accent' => 'bg-slate-600', 'badge' => 'bg-slate-100 text-slate-700 ring-slate-600/20'];
@@ -15,9 +15,7 @@
 @endphp
 
 <header class="sticky top-0 z-20 border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-    <div class="h-0.5 w-full {{ $meta['accent'] }}"></div>
-
-    <div class="flex h-[3.25rem] items-center gap-2 px-3 sm:gap-3 sm:px-4 lg:px-8">
+    <div class="flex h-14 items-center gap-2 px-3 sm:gap-3 sm:px-4 lg:px-8">
         <button type="button"
                 class="inline-flex shrink-0 items-center justify-center rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 lg:hidden dark:border-slate-700 dark:hover:bg-slate-800"
                 @click="sidebarOpen = true">
@@ -82,7 +80,7 @@
             <x-dropdown align="right" width="64" contentClasses="py-2 bg-white dark:bg-slate-900">
                 <x-slot name="trigger">
                     <button type="button" class="flex items-center gap-2 rounded-lg border border-slate-200 p-1 pr-2 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 sm:pr-3">
-                        <div class="flex h-8 w-8 items-center justify-center rounded-full {{ $meta['accent'] }} text-xs font-bold text-white">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-700 dark:bg-slate-700 dark:text-slate-200">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
                         <span class="hidden max-w-[88px] truncate text-xs font-semibold text-slate-800 dark:text-white lg:block">{{ $user->name }}</span>
                     </button>
                 </x-slot>
@@ -95,7 +93,7 @@
                     @if (Route::has('profile.edit'))
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Profil Akun</a>
                     @endif
-                    <form method="POST" action="{{ route('logout') }}" data-no-loading>@csrf
+                    <form method="POST" action="{{ route('logout') }}" data-no-loading data-no-transition>@csrf
                         <button type="submit" class="block w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30">Keluar</button>
                     </form>
                 </x-slot>

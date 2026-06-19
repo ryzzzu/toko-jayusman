@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Data Stok Barang</h1>
-                <p class="text-sm text-slate-500">Monitoring jumlah stok barang di setiap cabang</p>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Data Stok</h1>
+                <p class="mt-0.5 text-sm text-slate-500">Monitoring stok per cabang</p>
             </div>
         </div>
     </x-slot>
@@ -14,7 +14,7 @@
         $safeStockCount = $stocks->where('quantity', '>', 10)->count();
     @endphp
 
-    <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <x-ui.stat-card label="Total Stok" :value="number_format($totalStock, 0, ',', '.')" />
         <x-ui.stat-card label="Stok Aman" :value="$safeStockCount" />
         <x-ui.stat-card label="Stok Menipis" :value="$lowStockCount" />
@@ -22,8 +22,8 @@
 
     <x-ui.card :padding="false">
         <x-slot:header>
-            <h3 class="font-semibold text-slate-900 dark:text-white">Daftar Stok Barang</h3>
-            <p class="text-sm text-slate-500">Stok ditampilkan berdasarkan cabang dan produk</p>
+            <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Daftar Stok</h3>
+            <p class="mt-0.5 text-sm text-slate-500">{{ $stocks->count() }} entri stok</p>
         </x-slot:header>
         <div class="ui-table-wrap rounded-none border-0 shadow-none">
             <table class="ui-table">

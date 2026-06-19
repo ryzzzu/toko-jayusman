@@ -2,23 +2,17 @@
     <x-slot name="header">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Data Produk</h1>
-                <p class="text-sm text-slate-500">Kelola produk, harga beli, harga jual, dan satuan barang</p>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Data Produk</h1>
+                <p class="mt-0.5 text-sm text-slate-500">Kelola produk, harga, dan satuan barang</p>
             </div>
-            <x-ui.button href="{{ route('products.create') }}" variant="primary">+ Tambah Produk</x-ui.button>
+            <x-ui.button href="{{ route('products.create') }}" variant="primary">Tambah Produk</x-ui.button>
         </div>
     </x-slot>
 
-    <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <x-ui.stat-card label="Total Produk" :value="$products->count()" />
-        <x-ui.stat-card label="Pengelolaan Harga" value="Aktif" />
-        <x-ui.stat-card label="Data Produk" value="Terpusat" />
-    </div>
-
     <x-ui.card :padding="false">
         <x-slot:header>
-            <h3 class="font-semibold text-slate-900 dark:text-white">Daftar Produk</h3>
-            <p class="text-sm text-slate-500">Produk yang digunakan dalam transaksi penjualan</p>
+            <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Daftar Produk</h3>
+            <p class="mt-0.5 text-sm text-slate-500">{{ $products->count() }} produk terdaftar</p>
         </x-slot:header>
         <div class="ui-table-wrap rounded-none border-0 shadow-none">
             <table class="ui-table">
@@ -36,15 +30,7 @@
                 <tbody data-searchable>
                     @forelse($products as $product)
                         <tr data-row data-search="{{ strtolower($product->product_name . ' ' . ($product->category->category_name ?? '') . ' ' . ($product->barcode ?? '')) }}">
-                            <td>
-                                <div class="flex items-center gap-3">
-                                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-sm font-bold text-brand-700">{{ strtoupper(substr($product->product_name, 0, 1)) }}</div>
-                                    <div>
-                                        <p class="font-semibold text-slate-900 dark:text-white">{{ $product->product_name }}</p>
-                                        <p class="text-xs text-slate-500">Master produk</p>
-                                    </div>
-                                </div>
-                            </td>
+                            <td class="font-medium text-slate-900 dark:text-white">{{ $product->product_name }}</td>
                             <td><x-ui.badge variant="brand">{{ $product->category->category_name ?? '-' }}</x-ui.badge></td>
                             <td>{{ $product->barcode ?? '-' }}</td>
                             <td class="text-right">Rp {{ number_format($product->purchase_price, 0, ',', '.') }}</td>

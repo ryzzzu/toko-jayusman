@@ -2,11 +2,24 @@ import './bootstrap';
 
 import Alpine from 'alpinejs';
 import { initLoading } from './loading';
+import { initPageTransition } from './page-transition';
+import { initDashboardCharts } from './charts';
 
 window.Alpine = Alpine;
 
 Alpine.start();
 initLoading();
+initPageTransition();
+
+const bootCharts = () => requestAnimationFrame(() => initDashboardCharts());
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootCharts);
+} else {
+    bootCharts();
+}
+
+window.addEventListener('pageshow', bootCharts);
 
 window.addEventListener('global-search', (event) => {
     const term = (event.detail ?? '').trim().toLowerCase();

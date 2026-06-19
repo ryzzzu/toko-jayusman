@@ -61,7 +61,7 @@
     {{-- Brand --}}
     <div class="flex h-16 items-center border-b border-slate-100 px-4 dark:border-slate-800"
          :class="sidebarCollapsed ? 'justify-center' : 'gap-3'">
-        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 text-sm font-bold text-white shadow-sm">J</div>
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-sm font-semibold text-white">J</div>
         <div x-show="!sidebarCollapsed" x-cloak class="min-w-0">
             <p class="truncate text-sm font-bold text-slate-900 dark:text-white">Toko Jayusman</p>
             <p class="truncate text-[11px] text-slate-500">ERP Multi Cabang</p>
@@ -88,13 +88,13 @@
                             @endphp
                             <a href="{{ $href }}"
                                title="{{ $item['label'] }}"
-           class="group flex items-center rounded-xl text-sm font-medium
+                               class="group flex items-center rounded-lg text-sm font-medium
                                       {{ $active
-                                          ? 'bg-brand-600 text-white'
-                                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white' }}"
-                               :class="sidebarCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2.5'">
-                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
-                                             {{ $active ? 'bg-white/15' : 'bg-slate-100 text-slate-500 group-hover:bg-white dark:bg-slate-800' }}">
+                                          ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300'
+                                          : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white' }}"
+                               :class="sidebarCollapsed ? 'justify-center p-2.5' : 'gap-3 px-3 py-2'">
+                                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md
+                                             {{ $active ? 'text-brand-600 dark:text-brand-400' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300' }}">
                                     @include('layouts.partials.icon', ['name' => $item['icon'], 'active' => $active])
                                 </span>
                                 <span x-show="!sidebarCollapsed" x-cloak class="truncate">{{ $item['label'] }}</span>

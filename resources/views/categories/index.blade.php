@@ -2,16 +2,16 @@
     <x-slot name="header">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Data Kategori</h1>
-                <p class="text-sm text-slate-500">Kelola kategori barang di mini market</p>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Data Kategori</h1>
+                <p class="mt-0.5 text-sm text-slate-500">Kelola kategori barang</p>
             </div>
-            <x-ui.button href="{{ route('categories.create') }}" variant="primary">+ Tambah Kategori</x-ui.button>
+            <x-ui.button href="{{ route('categories.create') }}" variant="primary">Tambah Kategori</x-ui.button>
         </div>
     </x-slot>
 
     <x-ui.card :padding="false">
         <x-slot:header>
-            <h3 class="font-semibold text-slate-900 dark:text-white">Daftar Kategori</h3>
+            <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Daftar Kategori</h3>
         </x-slot:header>
         <div class="ui-table-wrap rounded-none border-0 shadow-none">
             <table class="ui-table">

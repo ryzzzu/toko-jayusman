@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
-                <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Laporan Stok Barang</h1>
-                <p class="text-sm text-slate-500">Posisi stok atau mutasi stok per periode</p>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Laporan Stok</h1>
+                <p class="mt-0.5 text-sm text-slate-500">Posisi dan mutasi stok per periode</p>
             </div>
             <div class="flex gap-2 no-print">
                 <x-ui.button href="{{ route('reports.transactions') }}" variant="secondary">Transaksi</x-ui.button>

@@ -2,16 +2,16 @@
     <x-slot name="header">
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Mutasi Stok</h1>
-                <p class="text-sm text-slate-500">Riwayat barang masuk, keluar, penjualan, dan penyesuaian stok</p>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Mutasi Stok</h1>
+                <p class="mt-0.5 text-sm text-slate-500">Riwayat barang masuk, keluar, dan penyesuaian</p>
             </div>
             @if(auth()->user()->role === 'warehouse')
-                <x-ui.button href="{{ route('stock-movements.create') }}" variant="primary">+ Input Stok</x-ui.button>
+                <x-ui.button href="{{ route('stock-movements.create') }}" variant="primary">Input Stok</x-ui.button>
             @endif
         </div>
     </x-slot>
 
-    <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mb-5 grid grid-cols-2 gap-4 xl:grid-cols-4">
         <x-ui.stat-card label="Total Mutasi" :value="$movements->count()" />
         <x-ui.stat-card label="Barang Masuk" :value="$movements->where('type', 'in')->count()" />
         <x-ui.stat-card label="Barang Keluar" :value="$movements->where('type', 'out')->count()" />

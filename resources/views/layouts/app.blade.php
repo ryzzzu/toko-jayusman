@@ -31,15 +31,17 @@
 
         @include('layouts.partials.topbar')
 
-        <main class="px-4 py-6 lg:px-8 lg:py-8">
-            @include('layouts.partials.page-header')
+        <main class="px-4 py-5 lg:px-8">
+            <div id="page-content">
+                @include('layouts.partials.page-header')
 
-            <x-ui.flash />
+                <x-ui.flash />
 
-            {{ $slot }}
+                {{ $slot }}
+
+                @include('layouts.partials.footer')
+            </div>
         </main>
-
-        @include('layouts.partials.footer')
     </div>
 </body>
 </html>

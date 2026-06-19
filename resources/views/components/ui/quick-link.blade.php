@@ -2,11 +2,8 @@
 
 @php
     $tones = [
-        'brand' => ['box' => 'bg-brand-600', 'hover' => 'hover:border-brand-300 hover:bg-brand-50/40 dark:hover:border-brand-700'],
-        'emerald' => ['box' => 'bg-accent-600', 'hover' => 'hover:border-accent-300 hover:bg-accent-50/40 dark:hover:border-accent-800'],
-        'amber' => ['box' => 'bg-amber-500', 'hover' => 'hover:border-amber-300 hover:bg-amber-50/40 dark:hover:border-amber-800'],
-        'violet' => ['box' => 'bg-violet-600', 'hover' => 'hover:border-violet-300 hover:bg-violet-50/40 dark:hover:border-violet-800'],
-        'rose' => ['box' => 'bg-rose-600', 'hover' => 'hover:border-rose-300 hover:bg-rose-50/40 dark:hover:border-rose-800'],
+        'brand' => ['box' => 'bg-brand-600', 'hover' => 'hover:border-brand-200 hover:bg-brand-50/50 dark:hover:border-brand-800 dark:hover:bg-brand-950/20'],
+        'accent' => ['box' => 'bg-accent-600', 'hover' => 'hover:border-accent-200 hover:bg-accent-50/50 dark:hover:border-accent-800 dark:hover:bg-accent-950/20'],
         'slate' => ['box' => 'bg-slate-600', 'hover' => 'hover:border-slate-300 hover:bg-slate-50 dark:hover:border-slate-600'],
     ];
     $t = $tones[$tone] ?? $tones['brand'];
@@ -23,7 +20,7 @@
         @if($category)
             <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">{{ $category }}</p>
         @endif
-        <p class="truncate font-semibold text-slate-900 group-hover:text-brand-600 dark:text-white">{{ $label }}</p>
+        <p class="truncate font-semibold text-slate-900 group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-400">{{ $label }}</p>
         @if($description)
             <p class="mt-0.5 truncate text-xs text-slate-500">{{ $description }}</p>
         @endif

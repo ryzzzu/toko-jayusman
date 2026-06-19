@@ -7,7 +7,11 @@
             @if ($required)<span class="text-red-500">*</span>@endif
         </label>
     @endif
-    <select {{ $attributes->merge(['class' => 'ui-select'])->except('label', 'required') }}>
+    <select
+        @if($name) name="{{ $name }}" @endif
+        @if($required) required @endif
+        {{ $attributes->merge(['class' => 'ui-select']) }}
+    >
         {{ $slot }}
     </select>
     @if ($name)

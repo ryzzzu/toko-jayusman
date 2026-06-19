@@ -49,7 +49,7 @@
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between"><span class="text-slate-500">Total</span><span class="text-xl font-bold">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</span></div>
                 <div class="flex justify-between"><span class="text-slate-500">Bayar</span><span class="font-semibold">Rp {{ number_format($transaction->payment, 0, ',', '.') }}</span></div>
-                <div class="flex justify-between border-t border-slate-100 pt-2 dark:border-slate-800"><span class="text-slate-500">Kembalian</span><span class="font-semibold text-emerald-600">Rp {{ number_format($transaction->change, 0, ',', '.') }}</span></div>
+                <div class="flex justify-between border-t border-slate-100 pt-2 dark:border-slate-800"><span class="text-slate-500">Kembalian</span><span class="font-semibold text-accent-600 dark:text-accent-400">Rp {{ number_format($transaction->change, 0, ',', '.') }}</span></div>
             </div>
         </x-ui.card>
     </div>

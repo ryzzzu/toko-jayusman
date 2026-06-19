@@ -1,42 +1,29 @@
 <x-app-layout>
     @php
         $role = auth()->user()->role;
-        $headers = [
-            'owner' => ['Dashboard Owner', 'Ringkasan performa seluruh cabang mini market'],
-            'manager' => ['Dashboard Manajer', 'Penjualan, stok, dan operasional cabang'],
-            'supervisor' => ['Dashboard Supervisor', 'Monitoring transaksi kasir dan stok'],
-            'cashier' => ['Dashboard Kasir', 'Fokus transaksi — cepat dan mudah'],
-            'warehouse' => ['Dashboard Gudang', 'Barang masuk, keluar, dan stok minimum'],
-        ];
-        [$title, $subtitle] = $headers[$role] ?? ['Dashboard', 'Sistem Informasi Mini Market'];
     @endphp
 
     <x-slot name="header">
-        <div>
-            <h1 class="text-lg font-semibold text-slate-900 dark:text-white">{{ $title }}</h1>
-            <p class="text-sm text-slate-500">{{ $subtitle }}</p>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Dashboard</h1>
+                <p class="mt-0.5 text-sm text-slate-500">Ringkasan operasional {{ auth()->user()->branch->branch_name ?? 'seluruh cabang' }}</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                @if($role === 'cashier')
+                    <x-ui.button href="{{ route('transactions.create') }}" variant="primary">Transaksi Baru</x-ui.button>
+                @endif
+                @if(in_array($role, ['owner', 'manager']))
+                    <x-ui.button href="{{ route('reports.transactions') }}" variant="secondary">Laporan</x-ui.button>
+                @endif
+                @if($role === 'warehouse')
+                    <x-ui.button href="{{ route('stock-movements.create', ['type' => 'in']) }}" variant="secondary">Barang Masuk</x-ui.button>
+                @endif
+            </div>
         </div>
     </x-slot>
 
     <x-dashboard.branch-warning :branch-warning="$branchWarning ?? false" />
 
-    @switch($role)
-        @case('owner')
-            @include('dashboard.owner')
-            @break
-        @case('manager')
-            @include('dashboard.manager')
-            @break
-        @case('supervisor')
-            @include('dashboard.supervisor')
-            @break
-        @case('cashier')
-            @include('dashboard.cashier')
-            @break
-        @case('warehouse')
-            @include('dashboard.warehouse')
-            @break
-        @default
-            @include('dashboard.manager')
-    @endswitch
+    @include('dashboard.analytics')
 </x-app-layout>
