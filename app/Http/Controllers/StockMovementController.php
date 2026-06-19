@@ -43,6 +43,10 @@ class StockMovementController extends Controller
 
         $user = Auth::user();
 
+        if (!$user->branch_id) {
+            return back()->with('error', 'Akun gudang belum terhubung ke cabang.');
+        }
+
         $stock = Stock::firstOrCreate(
             [
                 'branch_id' => $user->branch_id,

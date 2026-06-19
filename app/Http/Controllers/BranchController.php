@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branch;
+use App\Models\Product;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
@@ -27,11 +29,19 @@ class BranchController extends Controller
             'address' => 'nullable|string',
         ]);
 
-        Branch::create([
+        $branch = Branch::create([
             'branch_name' => $request->branch_name,
             'city' => $request->city,
             'address' => $request->address,
         ]);
+
+        foreach (Product::all() as $product) {
+            Stock::create([
+                'branch_id' => $branch->id,
+                'product_id' => $product->id,
+                'quantity' => 0,
+            ]);
+        }
 
         return redirect()->route('branches.index')
             ->with('success', 'Cabang berhasil ditambahkan.');
@@ -62,6 +72,11 @@ class BranchController extends Controller
 
     public function destroy(Branch $branch)
     {
+        if ($branch->users()->exists()) {
+            return redirect()->route('branches.index')
+                ->with('error', 'Cabang tidak dapat dihapus karena masih memiliki pengguna.');
+        }
+
         $branch->delete();
 
         return redirect()->route('branches.index')

@@ -22,10 +22,6 @@ class Branch extends Model
         return $this->hasMany(Stock::class);
     }
 
-    public function branch()
-    {
-        return $this->belongsTo(Branch::class);
-    }
     public function transactions()
     {
         return $this->hasMany(Transaction::class);

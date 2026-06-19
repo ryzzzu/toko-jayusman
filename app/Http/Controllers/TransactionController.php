@@ -30,7 +30,19 @@ class TransactionController extends Controller
 
     public function create()
     {
-        $products = Product::with('stocks')->get();
+        $user = Auth::user();
+        $branchId = $user->branch_id;
+
+        if (!$branchId) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Akun kasir belum terhubung ke cabang.');
+        }
+
+        $products = Product::whereHas('stocks', function ($query) use ($branchId) {
+            $query->where('branch_id', $branchId)->where('quantity', '>', 0);
+        })->with(['stocks' => function ($query) use ($branchId) {
+            $query->where('branch_id', $branchId);
+        }])->orderBy('product_name')->get();
 
         return view('transactions.create', compact('products'));
     }
@@ -38,15 +50,40 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|array',
-            'product_id.*' => 'required|exists:products,id',
+            'product_id' => 'required|array|min:1',
+            'product_id.*' => 'nullable|exists:products,id',
             'quantity' => 'required|array',
-            'quantity.*' => 'required|integer|min:1',
+            'quantity.*' => 'nullable|integer|min:1',
             'payment' => 'required|integer|min:0',
         ]);
 
         $user = Auth::user();
         $branchId = $user->branch_id;
+
+        if (!$branchId) {
+            return back()->with('error', 'Akun kasir belum terhubung ke cabang.');
+        }
+
+        $lineItems = [];
+        foreach ($request->product_id as $index => $productId) {
+            if (empty($productId)) {
+                continue;
+            }
+
+            $quantity = $request->quantity[$index] ?? null;
+            if (!$quantity || $quantity < 1) {
+                return back()->with('error', 'Jumlah barang harus diisi dengan benar.');
+            }
+
+            $lineItems[] = [
+                'product_id' => $productId,
+                'quantity' => $quantity,
+            ];
+        }
+
+        if (empty($lineItems)) {
+            return back()->with('error', 'Pilih minimal satu produk.');
+        }
 
         DB::beginTransaction();
 
@@ -54,16 +91,17 @@ class TransactionController extends Controller
             $totalPrice = 0;
             $items = [];
 
-            foreach ($request->product_id as $index => $productId) {
-                $product = Product::findOrFail($productId);
-                $quantity = $request->quantity[$index];
+            foreach ($lineItems as $lineItem) {
+                $product = Product::findOrFail($lineItem['product_id']);
+                $quantity = $lineItem['quantity'];
 
                 $stock = Stock::where('branch_id', $branchId)
-                    ->where('product_id', $productId)
+                    ->where('product_id', $product->id)
                     ->first();
 
                 if (!$stock || $stock->quantity < $quantity) {
                     DB::rollBack();
+
                     return back()->with('error', 'Stok produk ' . $product->product_name . ' tidak mencukupi.');
                 }
 
@@ -81,6 +119,7 @@ class TransactionController extends Controller
 
             if ($request->payment < $totalPrice) {
                 DB::rollBack();
+
                 return back()->with('error', 'Pembayaran kurang.');
             }
 
@@ -130,6 +169,12 @@ class TransactionController extends Controller
 
     public function show(Transaction $transaction)
     {
+        $user = Auth::user();
+
+        if ($user->role !== 'owner' && $transaction->branch_id !== $user->branch_id) {
+            abort(403, 'Akses ditolak');
+        }
+
         $transaction->load(['branch', 'cashier', 'details.product']);
 
         return view('transactions.show', compact('transaction'));

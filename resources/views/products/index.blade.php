@@ -24,6 +24,12 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="mb-5 p-4 bg-red-100 text-red-700 rounded-xl">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                 <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
                     <p class="text-sm text-gray-500">Total Produk</p>

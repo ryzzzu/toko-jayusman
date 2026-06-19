@@ -118,10 +118,12 @@
                         </p>
                     </div>
 
+                    @if(in_array(auth()->user()->role, ['owner', 'manager']))
                     <a href="{{ route('reports.transactions') }}"
                        class="inline-flex items-center justify-center px-5 py-3 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl font-semibold">
                         Lihat Laporan
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -144,17 +146,21 @@
                     </a>
                 @endif
 
-                <a href="{{ route('stocks.index') }}"
-                   class="bg-white rounded-2xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition">
-                    <p class="text-sm text-gray-500">Persediaan</p>
-                    <h4 class="font-bold text-gray-900 mt-1">Data Stok</h4>
-                </a>
+                @if(in_array(auth()->user()->role, ['owner', 'manager', 'supervisor', 'warehouse']))
+                    <a href="{{ route('stocks.index') }}"
+                       class="bg-white rounded-2xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition">
+                        <p class="text-sm text-gray-500">Persediaan</p>
+                        <h4 class="font-bold text-gray-900 mt-1">Data Stok</h4>
+                    </a>
+                @endif
 
-                <a href="{{ route('transactions.index') }}"
-                   class="bg-white rounded-2xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition">
-                    <p class="text-sm text-gray-500">Penjualan</p>
-                    <h4 class="font-bold text-gray-900 mt-1">Data Transaksi</h4>
-                </a>
+                @if(in_array(auth()->user()->role, ['owner', 'manager', 'supervisor', 'cashier']))
+                    <a href="{{ route('transactions.index') }}"
+                       class="bg-white rounded-2xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition">
+                        <p class="text-sm text-gray-500">Penjualan</p>
+                        <h4 class="font-bold text-gray-900 mt-1">Data Transaksi</h4>
+                    </a>
+                @endif
 
             </div>
 

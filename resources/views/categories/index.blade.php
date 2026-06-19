@@ -14,6 +14,12 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="bg-white shadow rounded-lg p-6">
 
                 <div class="flex justify-between items-center mb-4">

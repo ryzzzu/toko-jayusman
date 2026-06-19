@@ -2,65 +2,87 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-    $products = \App\Models\Product::with('category')->latest()->get();
+        $products = Product::with('category')->latest()->get();
 
-    return view('products.index', compact('products'));
+        return view('products.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $categories = Category::orderBy('category_name')->get();
+
+        return view('products.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'product_name' => 'required|string|max:255',
+            'barcode' => 'nullable|string|max:255|unique:products,barcode',
+            'purchase_price' => 'required|integer|min:0',
+            'selling_price' => 'required|integer|min:0',
+            'unit' => 'required|string|max:50',
+        ]);
+
+        $product = Product::create($validated);
+
+        foreach (Branch::all() as $branch) {
+            Stock::create([
+                'branch_id' => $branch->id,
+                'product_id' => $product->id,
+                'quantity' => 0,
+            ]);
+        }
+
+        return redirect()->route('products.index')
+            ->with('success', 'Produk berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Product $product)
     {
-        //
+        $categories = Category::orderBy('category_name')->get();
+
+        return view('products.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'product_name' => 'required|string|max:255',
+            'barcode' => 'nullable|string|max:255|unique:products,barcode,' . $product->id,
+            'purchase_price' => 'required|integer|min:0',
+            'selling_price' => 'required|integer|min:0',
+            'unit' => 'required|string|max:50',
+        ]);
+
+        $product->update($validated);
+
+        return redirect()->route('products.index')
+            ->with('success', 'Produk berhasil diperbarui.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Product $product)
     {
-        //
-    }
+        if ($product->transactionDetails()->exists()) {
+            return redirect()->route('products.index')
+                ->with('error', 'Produk tidak dapat dihapus karena sudah digunakan dalam transaksi.');
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $product->delete();
+
+        return redirect()->route('products.index')
+            ->with('success', 'Produk berhasil dihapus.');
     }
 }

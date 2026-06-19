@@ -31,12 +31,12 @@ Route::middleware(['auth'])->group(function () {
         ->name('profile.destroy');
 
     Route::middleware(['role:owner'])->group(function () {
-        Route::resource('/branches', BranchController::class);
+        Route::resource('/branches', BranchController::class)->except(['show']);
     });
 
     Route::middleware(['role:owner,manager'])->group(function () {
-        Route::resource('/categories', CategoryController::class);
-        Route::resource('/products', ProductController::class);
+        Route::resource('/categories', CategoryController::class)->except(['show']);
+        Route::resource('/products', ProductController::class)->except(['show']);
     });
 
     Route::middleware(['role:owner,manager,supervisor,warehouse'])->group(function () {

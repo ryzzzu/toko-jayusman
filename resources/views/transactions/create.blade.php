@@ -8,6 +8,9 @@
             <p style="color: red;">{{ session('error') }}</p>
         @endif
 
+        @if($products->isEmpty())
+            <p style="color: red;">Tidak ada produk dengan stok tersedia di cabang ini.</p>
+        @else
         <form action="{{ route('transactions.store') }}" method="POST">
             @csrf
 
@@ -17,8 +20,11 @@
                 <select name="product_id[]" required>
                     <option value="">Pilih Produk</option>
                     @foreach($products as $product)
+                        @php
+                            $stockQty = $product->stocks->first()->quantity ?? 0;
+                        @endphp
                         <option value="{{ $product->id }}">
-                            {{ $product->product_name }} - Rp {{ number_format($product->selling_price, 0, ',', '.') }}
+                            {{ $product->product_name }} - Stok: {{ $stockQty }} - Rp {{ number_format($product->selling_price, 0, ',', '.') }}
                         </option>
                     @endforeach
                 </select>
@@ -39,8 +45,11 @@
                 <select name="product_id[]">
                     <option value="">Tidak ada</option>
                     @foreach($products as $product)
+                        @php
+                            $stockQty = $product->stocks->first()->quantity ?? 0;
+                        @endphp
                         <option value="{{ $product->id }}">
-                            {{ $product->product_name }} - Rp {{ number_format($product->selling_price, 0, ',', '.') }}
+                            {{ $product->product_name }} - Stok: {{ $stockQty }} - Rp {{ number_format($product->selling_price, 0, ',', '.') }}
                         </option>
                     @endforeach
                 </select>
@@ -64,5 +73,6 @@
 
             <button type="submit">Simpan Transaksi</button>
         </form>
+        @endif
     </div>
 </x-app-layout>
