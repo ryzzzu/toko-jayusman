@@ -1,3 +1,81 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    [x-cloak] {
+        display: none !important;
+    }
+
+    html {
+        @apply antialiased;
+    }
+
+    body {
+        @apply bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+    }
+}
+
+@layer components {
+    .ui-input {
+        @apply block w-full rounded-xl border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm transition duration-200 placeholder:text-slate-400 focus:border-brand-500 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100;
+    }
+
+    .ui-select {
+        @apply ui-input appearance-none bg-[length:1.25rem] bg-[right_0.75rem_center] bg-no-repeat pr-10;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    }
+
+    .ui-textarea {
+        @apply ui-input min-h-[6rem] resize-y;
+    }
+
+    .ui-label {
+        @apply mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300;
+    }
+
+    .ui-table-wrap {
+        @apply overflow-x-auto rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900;
+    }
+
+    .ui-table {
+        @apply w-full min-w-full text-sm;
+    }
+
+    .ui-table thead {
+        @apply sticky top-0 z-10 bg-slate-50 dark:bg-slate-800;
+    }
+
+    .ui-table th {
+        @apply px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400;
+    }
+
+    .ui-table tbody tr:nth-child(even) {
+        @apply bg-slate-50/50 dark:bg-slate-800/30;
+    }
+
+    .ui-table tbody tr {
+        @apply border-t border-slate-100 transition duration-200 hover:bg-brand-50/40 dark:border-slate-800 dark:hover:bg-brand-950/20;
+    }
+
+    .ui-table td {
+        @apply px-5 py-4 text-slate-700 dark:text-slate-300;
+    }
+
+    .app-shell {
+        @apply bg-slate-100 dark:bg-slate-950;
+        background-image: radial-gradient(circle at 1px 1px, rgb(148 163 184 / 0.12) 1px, transparent 0);
+        background-size: 24px 24px;
+    }
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .print-area {
+        box-shadow: none !important;
+        border: none !important;
+    }
+}

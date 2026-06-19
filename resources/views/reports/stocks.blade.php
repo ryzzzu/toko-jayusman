@@ -1,91 +1,99 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2>Laporan Stok Barang</h2>
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+                <h1 class="text-lg font-semibold text-slate-900 dark:text-white">Laporan Stok Barang</h1>
+                <p class="text-sm text-slate-500">Posisi stok atau mutasi stok per periode</p>
+            </div>
+            <div class="flex gap-2 no-print">
+                <x-ui.button href="{{ route('reports.transactions') }}" variant="secondary">Transaksi</x-ui.button>
+                <x-ui.button href="{{ route('reports.stocks') }}" variant="primary">Stok</x-ui.button>
+            </div>
+        </div>
     </x-slot>
 
-    <div style="padding: 20px;">
-        <form method="GET" action="{{ route('reports.stocks') }}">
+    <x-ui.card class="no-print mb-6">
+        <h3 class="mb-4 font-semibold text-slate-900 dark:text-white">Filter Laporan</h3>
+        <form method="GET" action="{{ route('reports.stocks') }}" data-loading-search class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5 xl:items-end">
             @if(auth()->user()->role === 'owner')
-                <label>Cabang</label>
-                <select name="branch_id">
+                <x-ui.select name="branch_id" label="Cabang">
                     <option value="">Semua Cabang</option>
                     @foreach($branches as $branch)
-                        <option value="{{ $branch->id }}" {{ request('branch_id') == $branch->id ? 'selected' : '' }}>
-                            {{ $branch->branch_name }}
-                        </option>
+                        <option value="{{ $branch->id }}" @selected(request('branch_id') == $branch->id)>{{ $branch->branch_name }}</option>
                     @endforeach
-                </select>
-                <br><br>
+                </x-ui.select>
             @endif
-
-            <label>Tanggal Awal</label>
-            <input type="date" name="start_date" value="{{ request('start_date') }}">
-            <br><br>
-
-            <label>Tanggal Akhir</label>
-            <input type="date" name="end_date" value="{{ request('end_date') }}">
-            <br><br>
-
-            <button type="submit">Filter</button>
-            <button type="button" onclick="window.print()">Cetak</button>
+            <x-ui.input type="date" name="start_date" label="Tanggal Awal" value="{{ request('start_date') }}" />
+            <x-ui.input type="date" name="end_date" label="Tanggal Akhir" value="{{ request('end_date') }}" />
+            <x-ui.button type="submit" variant="primary" loading-text="Memuat...">Filter</x-ui.button>
+            <x-ui.button type="button" variant="secondary" data-loading-print onclick="window.print()">Cetak</x-ui.button>
         </form>
+        <p class="mt-3 text-xs text-slate-500">Kosongkan tanggal untuk melihat posisi stok saat ini. Isi tanggal awal & akhir untuk laporan mutasi per periode.</p>
+    </x-ui.card>
 
-        <br>
+    <x-ui.card :padding="false" class="print-area">
+        <x-slot:header>
+            @if($reportMode === 'movements')
+                <h3 class="font-semibold text-slate-900 dark:text-white">Mutasi Stok Periode {{ request('start_date') }} — {{ request('end_date') }}</h3>
+            @else
+                <h3 class="font-semibold text-slate-900 dark:text-white">Posisi Stok Saat Ini</h3>
+            @endif
+        </x-slot:header>
 
-        @if($reportMode === 'movements')
-            <p><strong>Mutasi stok periode {{ request('start_date') }} s/d {{ request('end_date') }}</strong></p>
-
-            <table border="1" cellpadding="8" cellspacing="0">
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Cabang</th>
-                    <th>Produk</th>
-                    <th>Jenis</th>
-                    <th>Jumlah</th>
-                    <th>Petugas</th>
-                    <th>Keterangan</th>
-                </tr>
-
-                @forelse($movements as $movement)
-                    <tr>
-                        <td>{{ $movement->movement_date }}</td>
-                        <td>{{ $movement->branch->branch_name }}</td>
-                        <td>{{ $movement->product->product_name }}</td>
-                        <td>{{ $movement->type }}</td>
-                        <td>{{ $movement->quantity }}</td>
-                        <td>{{ $movement->user->name ?? '-' }}</td>
-                        <td>{{ $movement->description ?? '-' }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="7">Tidak ada mutasi stok pada periode ini.</td>
-                    </tr>
-                @endforelse
-            </table>
-        @else
-            <p><strong>Posisi stok saat ini</strong> (isi tanggal awal & akhir untuk laporan mutasi per periode)</p>
-
-            <table border="1" cellpadding="8" cellspacing="0">
-                <tr>
-                    <th>Cabang</th>
-                    <th>Kategori</th>
-                    <th>Produk</th>
-                    <th>Stok</th>
-                </tr>
-
-                @forelse($stocks as $stock)
-                    <tr>
-                        <td>{{ $stock->branch->branch_name }}</td>
-                        <td>{{ $stock->product->category->category_name }}</td>
-                        <td>{{ $stock->product->product_name }}</td>
-                        <td>{{ $stock->quantity }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4">Belum ada data stok.</td>
-                    </tr>
-                @endforelse
-            </table>
-        @endif
-    </div>
+        <div class="ui-table-wrap rounded-none border-0 shadow-none">
+            @if($reportMode === 'movements')
+                <table class="ui-table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Cabang</th>
+                            <th>Produk</th>
+                            <th>Jenis</th>
+                            <th class="text-center">Jumlah</th>
+                            <th>Petugas</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($movements as $movement)
+                            <tr>
+                                <td>{{ $movement->movement_date }}</td>
+                                <td>{{ $movement->branch->branch_name }}</td>
+                                <td>{{ $movement->product->product_name }}</td>
+                                <td>{{ $movement->type }}</td>
+                                <td class="text-center font-bold">{{ $movement->quantity }}</td>
+                                <td>{{ $movement->user->name ?? '-' }}</td>
+                                <td>{{ $movement->description ?? '-' }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="7" class="py-8 text-center text-slate-500">Tidak ada mutasi pada periode ini</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            @else
+                <table class="ui-table">
+                    <thead>
+                        <tr>
+                            <th>Cabang</th>
+                            <th>Kategori</th>
+                            <th>Produk</th>
+                            <th class="text-center">Stok</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($stocks as $stock)
+                            <tr>
+                                <td>{{ $stock->branch->branch_name }}</td>
+                                <td>{{ $stock->product->category->category_name }}</td>
+                                <td>{{ $stock->product->product_name }}</td>
+                                <td class="text-center font-bold">{{ $stock->quantity }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="4" class="py-8 text-center text-slate-500">Belum ada data stok</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            @endif
+        </div>
+    </x-ui.card>
 </x-app-layout>
