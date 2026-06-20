@@ -5,85 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Masuk — Toko Jayusman</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="h-full bg-slate-50 font-sans antialiased">
-    <div class="flex min-h-full lg:min-h-screen">
-        {{-- Brand panel --}}
-        <div class="relative hidden w-1/2 flex-col justify-between bg-brand-700 p-10 text-white lg:flex xl:p-14">
-            <div class="flex items-center gap-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/15 text-sm font-semibold">J</div>
-                <div>
-                    <p class="text-sm font-semibold">Toko Jayusman</p>
-                    <p class="text-xs text-white/70">ERP Multi Cabang</p>
-                </div>
-            </div>
+<body class="min-h-screen bg-slate-100 antialiased flex items-center justify-center p-4">
+    <div class="w-full max-w-5xl">
+        {{-- Card Container --}}
+        <div class="overflow-hidden rounded-2xl bg-white shadow-xl shadow-slate-200/50">
+            <div class="grid grid-cols-1 md:grid-cols-2">
+                
+                {{-- Left Panel - Brand / Information --}}
+                <div class="relative bg-indigo-600 p-8 md:p-10 flex flex-col justify-between min-h-[400px] md:min-h-[500px]">
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 text-sm font-bold text-white backdrop-blur-sm">
+                                J
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-white">Toko Jayusman</p>
+                                <p class="text-xs text-indigo-200">ERP Multi Cabang</p>
+                            </div>
+                        </div>
 
-            <div class="max-w-md">
-                <h1 class="text-3xl font-semibold leading-snug tracking-tight xl:text-4xl">
-                    Pantau transaksi & stok seluruh cabang dalam satu sistem.
-                </h1>
-                <p class="mt-4 text-sm leading-relaxed text-white/75">
-                    Monitoring terpusat untuk mini market multi cabang — transaksi, stok, dan laporan.
-                </p>
-            </div>
-
-            <p class="text-xs text-white/50">&copy; {{ date('Y') }} Sistem Informasi Mini Market</p>
-        </div>
-
-        {{-- Form panel --}}
-        <div class="flex w-full flex-1 items-center justify-center bg-white px-6 py-10 sm:px-10 lg:w-1/2 lg:px-16">
-            <div class="w-full max-w-sm">
-                <div class="mb-8 lg:hidden">
-                    <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600 text-sm font-semibold text-white">J</div>
-                    <p class="text-lg font-semibold text-slate-900">Toko Jayusman</p>
-                </div>
-
-                <h2 class="text-2xl font-semibold tracking-tight text-slate-900">Masuk ke akun</h2>
-                <p class="mt-1.5 text-sm text-slate-500">Gunakan kredensial yang diberikan administrator.</p>
-
-                <x-auth-session-status class="mt-4" :status="session('status')" />
-
-                <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-5" data-no-transition data-no-loading>
-                    @csrf
-
-                    <x-ui.input
-                        id="email"
-                        type="email"
-                        name="email"
-                        label="Email"
-                        :value="old('email')"
-                        required
-                        autofocus
-                        autocomplete="username"
-                        placeholder="nama@email.com"
-                    />
-
-                    <x-ui.input
-                        id="password"
-                        type="password"
-                        name="password"
-                        label="Password"
-                        required
-                        autocomplete="current-password"
-                        placeholder="••••••••"
-                    />
-
-                    <div class="flex items-center justify-between pt-1">
-                        <label class="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
-                            <input type="checkbox" name="remember" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500">
-                            Ingat saya
-                        </label>
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-sm font-medium text-brand-600 hover:text-brand-700">Lupa password?</a>
-                        @endif
+                        <div class="mt-10">
+                            <div class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
+                                <span class="relative flex h-1.5 w-1.5">
+                                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                                </span>
+                                Sistem Online
+                            </div>
+                            <h1 class="mt-6 text-3xl font-bold leading-tight text-white">
+                                Kelola Bisnis
+                                <span class="block text-indigo-200">Lebih Efisien</span>
+                            </h1>
+                            <p class="mt-3 text-sm leading-relaxed text-indigo-100/80">
+                                Pantau transaksi, stok, dan laporan seluruh cabang dalam satu dashboard terintegrasi.
+                            </p>
+                        </div>
                     </div>
 
-                    <x-ui.button type="submit" variant="primary" class="w-full !py-2.5" loading-text="Masuk...">
-                        Masuk
-                    </x-ui.button>
-                </form>
+                    <div class="relative z-10 mt-8">
+                        <div class="flex items-center gap-6 text-xs text-indigo-200/60">
+                            <span>&copy; {{ date('Y') }} Toko Jayusman</span>
+                            <span class="h-3 w-px bg-indigo-400/20"></span>
+                            <span>v2.0</span>
+                            <span class="h-3 w-px bg-indigo-400/20"></span>
+                            <span>🔒 SSL Secure</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Right Panel - Login Form --}}
+                <div class="p-8 md:p-10 flex flex-col justify-center">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-slate-900">Selamat Datang</h2>
+                        <p class="mt-1 text-sm text-slate-500">Masuk untuk mengakses dashboard Anda</p>
+                    </div>
+
+                    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+                    <form method="POST" action="{{ route('login') }}" class="space-y-4">
+                        @csrf
+
+                        <div>
+                            <x-input-label for="email" :value="__('Email')" class="text-sm font-medium text-slate-700"/>
+                            <div class="relative mt-1">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <x-text-input id="email" 
+                                    class="block w-full rounded-lg border-slate-200 pl-10 focus:border-indigo-500 focus:ring-indigo-500"
+                                    type="email" 
+                                    name="email" 
+                                    :value="old('email')" 
+                                    required 
+                                    autofocus 
+                                    autocomplete="username"
+                                    placeholder="nama@email.com"/>
+                            </div>
+                            <x-input-error :messages="$errors->get('email')" class="mt-1 text-sm text-red-600"/>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <x-input-label for="password" :value="__('Password')" class="text-sm font-medium text-slate-700"/>
+                                @if (Route::has('password.request'))
+                                    <a href="{{ route('password.request') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                        Lupa password?
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="relative mt-1">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                    </svg>
+                                </div>
+                                <x-text-input id="password" 
+                                    class="block w-full rounded-lg border-slate-200 pl-10 focus:border-indigo-500 focus:ring-indigo-500"
+                                    type="password" 
+                                    name="password" 
+                                    required 
+                                    autocomplete="current-password"
+                                    placeholder="••••••••"/>
+                            </div>
+                            <x-input-error :messages="$errors->get('password')" class="mt-1 text-sm text-red-600"/>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input id="remember" name="remember" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                            <label for="remember" class="ml-2 block text-sm text-slate-700">
+                                Ingat saya
+                            </label>
+                        </div>
+
+                        <button type="submit" class="flex w-full justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200">
+                            Masuk
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
